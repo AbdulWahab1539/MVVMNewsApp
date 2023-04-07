@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.Query
+import com.androiddevs.mvvmnewsapp.models.Article
 import com.androiddevs.mvvmnewsapp.models.NewsResponse
 import com.androiddevs.mvvmnewsapp.repo.NewsRepo
 import com.androiddevs.mvvmnewsapp.ui.util.Resource
@@ -22,7 +23,7 @@ class NewsViewModel(
     var searchNewsPage = 1
 
     init {
-        getBreakingNews("pk")
+        getBreakingNews("us")
     }
 
     private fun getBreakingNews(countryCode: String) = viewModelScope.launch {
@@ -62,6 +63,16 @@ class NewsViewModel(
             }
         }
         return Resource.Error(response.message())
+    }
+
+    fun saveArticle(article: Article) = viewModelScope.launch {
+        newsRepo.upsert(article)
+    }
+
+    fun getSavedNews() = newsRepo.getSavedNews()
+
+    fun deleteArticle(article: Article) = viewModelScope.launch {
+        newsRepo.deleteArticle(article)
     }
 
 }
